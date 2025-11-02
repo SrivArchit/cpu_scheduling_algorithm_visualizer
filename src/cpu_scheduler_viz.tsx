@@ -222,8 +222,7 @@ const CPUScheduler: React.FC = () => {
 
     let currentTime = 0;
     const ready: any[] = [];
-    let i = 0;
-
+    
     while (queue.some((p: any) => p.remaining > 0) || ready.length > 0) {
       // push newly arrived
       queue.forEach(qp => {

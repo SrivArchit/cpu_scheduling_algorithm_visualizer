@@ -1,5 +1,5 @@
 import './index.css'
-import CPUScheduler from "./cpu_scheduler_viz (1)";
+import CPUScheduler from "./cpu_scheduler_viz";
 
 function App() {
   return (
