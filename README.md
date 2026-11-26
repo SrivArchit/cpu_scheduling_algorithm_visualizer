@@ -6,6 +6,8 @@
 
 An interactive tool for seeing how operating-system CPU schedulers order processes. Add processes, pick an algorithm, and get the Gantt chart plus waiting and turnaround times for every process.
 
+![Round Robin with a time quantum of 2 on four processes: the Gantt chart, plus turnaround and waiting times for each process](docs/screenshot.png)
+
 ## Features
 
 - **Six scheduling algorithms**
