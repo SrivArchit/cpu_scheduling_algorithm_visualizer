@@ -1,75 +1,47 @@
-# React + TypeScript + Vite
+# CPU Scheduling Visualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![CI](https://github.com/SrivArchit/cpu_scheduling_algorithm_visualizer/actions/workflows/ci.yml/badge.svg)](https://github.com/SrivArchit/cpu_scheduling_algorithm_visualizer/actions/workflows/ci.yml)
 
-Currently, two official plugins are available:
+**Live demo:** https://cpuschedulingalgorithmvisualizer.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+An interactive tool for seeing how operating-system CPU schedulers order processes. Add processes, pick an algorithm, and get the Gantt chart plus waiting and turnaround times for every process.
 
-## React Compiler
+## Features
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- **Six scheduling algorithms**
+  - First Come First Serve (FCFS)
+  - Shortest Job First, non-preemptive (SJF)
+  - Shortest Remaining Time First, preemptive SJF (SRTF)
+  - Priority, non-preemptive and preemptive
+  - Round Robin with a configurable time quantum
+- **Editable process table**: add or remove processes and set each one's arrival time, burst time and priority
+- **Gantt chart** showing which process holds the CPU at every time unit
+- **Statistics**: turnaround time (TAT) and waiting time for each process, plus the averages
 
-Note: This will impact Vite dev & build performances.
+## Tech stack
 
-## Expanding the ESLint configuration
+React 19 · TypeScript · Vite · Tailwind CSS · lucide-react icons
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Run locally
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone https://github.com/SrivArchit/cpu_scheduling_algorithm_visualizer.git
+cd cpu_scheduling_algorithm_visualizer
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Then open the URL Vite prints (usually http://localhost:5173).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## CI and deployment
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Every push and pull request runs [`.github/workflows/ci.yml`](.github/workflows/ci.yml): ESLint, the TypeScript type-check and a production build.
+- Vercel redeploys the live demo on every push to `main`.
+
+## Author
+
+**Archit Srivastava** — B.Tech CSE, Manipal University Jaipur
+
+## License
+
+[GPL-3.0](LICENSE)

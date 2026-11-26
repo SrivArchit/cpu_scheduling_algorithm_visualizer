@@ -9,6 +9,9 @@ type Process = {
   priority: number;
 };
 
+// A process plus the CPU time it still needs (Round Robin's ready queue).
+type QueuedProcess = Process & { remaining: number };
+
 type GanttSegment = {
   process: string;
   start: number;
@@ -104,15 +107,15 @@ const CPUScheduler: React.FC = () => {
   const sjfNonPreemptive = (procs: Process[]): GanttSegment[] => {
     const chart: GanttSegment[] = [];
     let currentTime = 0;
-    const remaining = procs.map(p => ({ ...p, remaining: p.burstTime, started: false } as any));
+    const remaining = procs.map(p => ({ ...p, remaining: p.burstTime, started: false }));
 
-    while (remaining.some((r: any) => r.remaining > 0)) {
-      const available = remaining.filter((r: any) => r.arrivalTime <= currentTime && r.remaining > 0);
+    while (remaining.some(r => r.remaining > 0)) {
+      const available = remaining.filter(r => r.arrivalTime <= currentTime && r.remaining > 0);
       if (available.length === 0) {
         currentTime++;
         continue;
       }
-      const shortest = available.reduce((min: any, p: any) => p.remaining < min.remaining ? p : min);
+      const shortest = available.reduce((min, p) => p.remaining < min.remaining ? p : min);
       chart.push({ process: shortest.name, start: currentTime, end: currentTime + shortest.remaining, id: shortest.id });
       currentTime += shortest.remaining;
       shortest.remaining = 0;
@@ -162,15 +165,15 @@ const CPUScheduler: React.FC = () => {
     const sorted = [...procs].sort((a, b) => a.arrivalTime - b.arrivalTime);
     const chart: GanttSegment[] = [];
     let currentTime = 0;
-    const remaining = sorted.map(p => ({ ...p, done: false } as any));
+    const remaining = sorted.map(p => ({ ...p, done: false }));
 
-    while (remaining.some((r: any) => !r.done)) {
-      const available = remaining.filter((r: any) => r.arrivalTime <= currentTime && !r.done);
+    while (remaining.some(r => !r.done)) {
+      const available = remaining.filter(r => r.arrivalTime <= currentTime && !r.done);
       if (available.length === 0) {
         currentTime++;
         continue;
       }
-      const highest = available.reduce((min: any, p: any) => p.priority < min.priority ? p : min);
+      const highest = available.reduce((min, p) => p.priority < min.priority ? p : min);
       chart.push({ process: highest.name, start: currentTime, end: currentTime + highest.burstTime, id: highest.id });
       currentTime += highest.burstTime;
       highest.done = true;
@@ -221,9 +224,9 @@ const CPUScheduler: React.FC = () => {
       .sort((a, b) => a.arrivalTime - b.arrivalTime);
 
     let currentTime = 0;
-    const ready: any[] = [];
+    const ready: QueuedProcess[] = [];
     
-    while (queue.some((p: any) => p.remaining > 0) || ready.length > 0) {
+    while (queue.some(p => p.remaining > 0) || ready.length > 0) {
       // push newly arrived
       queue.forEach(qp => {
         if (qp.arrivalTime <= currentTime && !ready.includes(qp) && qp.remaining > 0) ready.push(qp);
@@ -234,7 +237,7 @@ const CPUScheduler: React.FC = () => {
         continue;
       }
 
-      const proc = ready.shift() as any;
+      const proc = ready.shift() as QueuedProcess; // non-empty: checked above
       const exec = Math.min(q, proc.remaining);
       chart.push({ process: proc.name, start: currentTime, end: currentTime + exec, id: proc.id });
       currentTime += exec;
